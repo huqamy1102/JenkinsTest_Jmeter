@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="all">
-    <property value="/Users/qing/tools/jmeter/jmeter5.2.1" name="jemter-home"/>
+    <property value="/Users/qing/tools/jmeter/jmeter5.2.1" name="jmeter-home"/>
         <path id="ant.jmeter.classpath">
-            <pathelement location="${jemter-home}/extras/ant-jmeter-1.1.1.jar"/>
+            <pathelement location="${jmeter-home}/extras/ant-jmeter-1.1.1.jar"/>
         </path>
         <taskdef name="jmeter" classpathref="ant.jmeter.classpath" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"/>
         <target name="clean">
@@ -12,13 +12,19 @@
             <mkdir dir="results/html"/>
         </target>
         <target name="test" depends="clean">
-            <jmeter resultlogdir="results/jtl" jmeterhome="${jemter-home}">
+            <jmeter resultlogdir="results/jtl" jmeterhome="${jmeter-home}">
                 <testplans dir="/Users/qing/tools/jmeter" includes="DemoTest.jmx"/>
                 <property value="xml" name="jmeter.save.saveservice.output_format"/>
             </jmeter>
         </target>
+
+        <path id="xslt.classpath">
+         <fileset dir="${jmeter-home}/lib" includes="xalan-2.7.2.jar"/>
+         <fileset dir="${jmeter-home}/lib" includes="serializer*.jar"/>
+        </path>
         <target name="report" depends="test">
-            <xslt includes="*.jtl" style="${jemter-home}/extras/jmeter-results-report_21.xsl" destdir="results/html" basedir="results/jtl"/>
+            <xslt classpathref="xslt.classpath" force="true" includes="*.jtl" style="${jmeter-home}/extras/jmeter-results-detail-report_21.xsl" destdir="results/html" basedir="results/jtl">
+            </xslt>
         </target>
         <target name="all" depends="test,report"/>
 </project>
